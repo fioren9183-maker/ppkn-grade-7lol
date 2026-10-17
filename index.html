@@ -1,0 +1,621 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PKN Quiz 🇮🇩</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --green: #a9d9b5;
+  --dark: #285b43;
+  --mint: #e7f6e9;
+  --white: #ffffff;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Poppins, sans-serif;
+  background: linear-gradient(135deg,#f8fff9,#d9f1df,#f1fff3);
+  color: var(--dark);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: .35;
+  background-image: radial-gradient(#72b98a 1.5px,transparent 1.5px);
+  background-size: 25px 25px;
+  z-index: -1;
+}
+.float {
+  position: fixed;
+  bottom: -60px;
+  font-size: 25px;
+  opacity: .55;
+  animation: rise linear infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+@keyframes rise {
+  from { transform:translateY(0) rotate(0deg); }
+  to { transform:translateY(-115vh) rotate(360deg); }
+}
+@keyframes bob {
+  50% { transform:translateY(-9px) rotate(2deg); }
+}
+@keyframes pop {
+  from { opacity:0; transform:scale(.92) translateY(12px); }
+  to { opacity:1; transform:scale(1) translateY(0); }
+}
+@keyframes shine {
+  50% { box-shadow:0 0 25px #a8dfb8; }
+}
+header {
+  text-align: center;
+  padding: 28px 15px 10px;
+}
+.logo {
+  display: inline-block;
+  padding: 9px 17px;
+  background: white;
+  border-radius: 30px;
+  box-shadow: 0 5px 18px #285b4317;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+h1 {
+  font-size: clamp(30px,8vw,49px);
+  line-height: 1.15;
+  margin: 18px 0 8px;
+  font-weight: 800;
+  animation: bob 3s infinite ease-in-out;
+}
+h1 span { color: #77b98b; }
+.subtitle { font-size: 13px; color: #668a72; }
+.container {
+  width: min(680px,92%);
+  margin: 15px auto 45px;
+}
+.card {
+  background: #ffffffdb;
+  border: 1px solid #ffffff;
+  border-radius: 25px;
+  padding: 23px;
+  box-shadow: 0 12px 35px #386f4b12;
+  backdrop-filter: blur(10px);
+  animation: pop .45s ease;
+}
+.hero {
+  text-align: center;
+  padding: 28px 22px;
+}
+.hero-icon {
+  font-size: 66px;
+  animation: bob 2.5s infinite;
+}
+.hero h2 { margin: 10px 0; font-size: 23px; }
+.hero p { font-size: 13px; line-height: 1.9; color: #64806c; }
+.tags {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 18px 0;
+}
+.tag {
+  background: #e5f5e8;
+  padding: 8px 12px;
+  border-radius: 13px;
+  font-size: 11px;
+  font-weight: 600;
+}
+button {
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: .2s;
+}
+button:hover { transform:translateY(-2px); }
+.primary {
+  width: 100%;
+  padding: 15px;
+  border-radius: 16px;
+  background: linear-gradient(120deg,#9bd6a9,#c4e9c9);
+  color: #214c34;
+  font-size: 14px;
+  font-weight: 800;
+  box-shadow: 0 7px 18px #7ebd8a35;
+}
+.primary:active { transform:scale(.97); }
+.topline {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  font-size:12px;
+  font-weight:700;
+  margin-bottom:15px;
+}
+.progress {
+  width:100%;
+  height:9px;
+  background:#e5f1e7;
+  border-radius:20px;
+  overflow:hidden;
+  margin-bottom:23px;
+}
+.bar {
+  height:100%;
+  background:linear-gradient(90deg,#8dcea0,#4d9e69);
+  width:0;
+  transition:width .4s;
+  border-radius:20px;
+}
+.question {
+  font-size:19px;
+  font-weight:700;
+  line-height:1.6;
+  margin: 10px 0 22px;
+}
+.options { display:grid; gap:11px; }
+.option {
+  text-align:left;
+  background:#f7fcf7;
+  color:#315a40;
+  border:2px solid #e0efe2;
+  border-radius:15px;
+  padding:14px;
+  font-size:13px;
+  line-height:1.6;
+  display:flex;
+  align-items:center;
+  gap:11px;
+}
+.letter {
+  width:30px;
+  height:30px;
+  min-width:30px;
+  display:grid;
+  place-items:center;
+  background:#e1f2e4;
+  border-radius:10px;
+  font-weight:800;
+}
+.option.correct {
+  border-color:#55b878;
+  background:#e2f8e7;
+}
+.option.wrong {
+  border-color:#e7a4a4;
+  background:#fff0f0;
+}
+.option:disabled { cursor:default; }
+.feedback {
+  margin-top:16px;
+  padding:13px;
+  border-radius:14px;
+  font-size:12px;
+  line-height:1.8;
+  background:#eef8ef;
+  animation:pop .3s;
+}
+.next { margin-top:17px; }
+.hidden { display:none !important; }
+.result { text-align:center; }
+.score-circle {
+  width:150px;
+  height:150px;
+  border-radius:50%;
+  border:9px solid #c7e9ce;
+  margin:20px auto;
+  display:grid;
+  place-items:center;
+  background:white;
+  animation:shine 2s infinite;
+}
+.score-circle strong { font-size:40px; }
+.result h2 { font-size:25px; }
+.result p { font-size:13px; line-height:1.8; }
+.section-title { font-size:21px; margin:0 0 7px; }
+.section-sub { font-size:12px; color:#719079; line-height:1.8; }
+.gallery {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:13px;
+  margin-top:18px;
+}
+.person {
+  background:#f7fcf7;
+  border:1px solid #e3f0e5;
+  border-radius:17px;
+  overflow:hidden;
+  text-align:center;
+  padding-bottom:13px;
+  transition:.25s;
+}
+.person:hover { transform:translateY(-5px); }
+.person img {
+  width:100%;
+  height:175px;
+  object-fit:cover;
+  background:#e4f2e6;
+  display:block;
+}
+.person b { display:block; font-size:12px; margin:11px 6px 4px; }
+.person small { display:block; font-size:10px; color:#72907a; padding:0 7px; line-height:1.6; }
+.credit { font-size:10px; color:#829886; margin-top:15px; line-height:1.8; }
+footer { text-align:center; padding:5px 10px 30px; font-size:10px; color:#76917d; }
+@media(max-width:380px) {
+  .card { padding:17px; }
+  .person img { height:145px; }
+  .question { font-size:17px; }
+}
+</style>
+</head>
+<body>
+
+<div id="decorations"></div>
+
+<header>
+  <div class="logo">✿ BELAJAR • BERMAIN • BERPRESTASI</div>
+  <h1>PKN <span>QUIZ!</span> 🇮🇩</h1>
+  <div class="subtitle">Belajar sejarah kemerdekaan jadi lebih seru!</div>
+</header>
+
+<main class="container">
+  <section class="card hero" id="home">
+    <div class="hero-icon">📚🌿</div>
+    <h2>Siap Uji Pengetahuanmu?</h2>
+    <p>
+      Yuk, kenali sejarah lahirnya Pancasila dan perjuangan
+      para tokoh Indonesia lewat 20 soal pilihan ganda!
+    </p>
+    <div class="tags">
+      <span class="tag">🌱 Kelas 7</span>
+      <span class="tag">📝 20 soal</span>
+      <span class="tag">⭐ Skor otomatis</span>
+      <span class="tag">🇮🇩 PKN</span>
+    </div>
+    <button class="primary" onclick="startQuiz()">MULAI KUIS ✨ →</button>
+  </section>
+
+  <section class="card hidden" id="quiz">
+    <div class="topline">
+      <span id="number">SOAL 1 / 20</span>
+      <span>⭐ <span id="score">0</span> poin</span>
+    </div>
+    <div class="progress"><div class="bar" id="bar"></div></div>
+    <div class="question" id="question"></div>
+    <div class="options" id="options"></div>
+    <div class="feedback hidden" id="feedback"></div>
+    <button class="primary next hidden" id="next" onclick="nextQuestion()">SOAL BERIKUTNYA →</button>
+  </section>
+
+  <section class="card result hidden" id="result">
+    <div class="hero-icon" id="resultEmoji">🏆</div>
+    <h2 id="resultTitle">Kuis Selesai!</h2>
+    <div class="score-circle">
+      <div><strong id="finalScore">0</strong><div style="font-size:12px">dari 100</div></div>
+    </div>
+    <p id="resultMessage"></p>
+    <p id="resultDetails"></p>
+    <button class="primary" onclick="startQuiz()">🔄 MAIN LAGI</button>
+    <button class="primary" style="margin-top:10px;background:#e4f4e7" onclick="showHome()">⌂ KEMBALI KE BERANDA</button>
+  </section>
+
+  <section class="card" id="gallerySection" style="margin-top:20px">
+    <h2 class="section-title">🌷 Kenalan dengan Tokoh</h2>
+    <p class="section-sub">
+      Tokoh-tokoh yang berperan dalam perumusan dasar negara
+      dan persiapan kemerdekaan Indonesia.
+    </p>
+    <div class="gallery" id="gallery"></div>
+    <div class="credit">
+      Foto dimuat dari Wikimedia Commons. Koneksi internet diperlukan.
+      Jika ada foto yang tidak tampil, tekan lama fotonya atau ganti URL
+      gambar dengan foto tokoh yang tersedia.
+    </div>
+  </section>
+</main>
+
+<footer>Made with 💚 for PKN class 7 • Cinta Indonesia 🇮🇩</footer>
+
+<script>
+const questions = [
+ {
+  q:"BPUPKI dibentuk untuk membahas persiapan ...",
+  a:["Pemilihan presiden","Kemerdekaan Indonesia","Perdagangan dunia","Pertandingan olahraga"],
+  c:1, e:"BPUPKI bertugas menyelidiki hal-hal penting untuk persiapan kemerdekaan Indonesia."
+ },
+ {
+  q:"Apa kepanjangan BPUPKI?",
+  a:["Badan Persiapan Umum Kemerdekaan Indonesia","Badan Penyelidik Usaha-Usaha Persiapan Kemerdekaan Indonesia","Badan Persatuan Umat Kemerdekaan Indonesia","Badan Pembentukan Undang-Undang Indonesia"],
+  c:1, e:"BPUPKI adalah Badan Penyelidik Usaha-Usaha Persiapan Kemerdekaan Indonesia."
+ },
+ {
+  q:"BPUPKI diresmikan pada tanggal ...",
+  a:["17 Agustus 1945","1 Juni 1945","28 Oktober 1928","29 April 1945"],
+  c:3, e:"BPUPKI diresmikan pada 29 April 1945."
+ },
+ {
+  q:"Siapa ketua BPUPKI?",
+  a:["Dr. Radjiman Wedyodiningrat","Mohammad Hatta","Soekarno","Ki Hajar Dewantara"],
+  c:0, e:"Ketua BPUPKI adalah Dr. Radjiman Wedyodiningrat."
+ },
+ {
+  q:"Sidang pertama BPUPKI membahas tentang ...",
+  a:["Lagu nasional","Dasar negara Indonesia","Mata uang digital","Pemilihan kepala daerah"],
+  c:1, e:"Sidang pertama BPUPKI pada 29 Mei–1 Juni 1945 membahas dasar negara."
+ },
+ {
+  q:"Siapa yang menyampaikan pidato tentang Pancasila pada 1 Juni 1945?",
+  a:["Soepomo","Ahmad Soebardjo","Soekarno","Sutan Sjahrir"],
+  c:2, e:"Soekarno menyampaikan pidato tentang dasar negara pada 1 Juni 1945."
+ },
+ {
+  q:"Tokoh yang menyampaikan gagasan dasar negara pada 29 Mei 1945 adalah ...",
+  a:["Mohammad Yamin","Soekarno","Mohammad Hatta","Sayuti Melik"],
+  c:0, e:"Mohammad Yamin menyampaikan gagasannya pada 29 Mei 1945."
+ },
+ {
+  q:"Tokoh yang menyampaikan gagasan dasar negara pada 31 Mei 1945 adalah ...",
+  a:["Soepomo","Fatmawati","Sutan Sjahrir","Ki Hajar Dewantara"],
+  c:0, e:"Prof. Dr. Soepomo menyampaikan gagasan dasar negara pada 31 Mei 1945."
+ },
+ {
+  q:"Panitia Sembilan terdiri atas ... orang.",
+  a:["Lima","Tujuh","Sembilan","Sepuluh"],
+  c:2, e:"Sesuai namanya, Panitia Sembilan beranggotakan sembilan orang."
+ },
+ {
+  q:"Hasil kerja Panitia Sembilan pada 22 Juni 1945 dikenal sebagai ...",
+  a:["Sumpah Pemuda","Piagam Jakarta","Dekret Presiden","Teks Proklamasi"],
+  c:1, e:"Panitia Sembilan menghasilkan Piagam Jakarta pada 22 Juni 1945."
+ },
+ {
+  q:"Siapa ketua Panitia Sembilan?",
+  a:["Mohammad Hatta","Soekarno","Ahmad Soebardjo","Mohammad Yamin"],
+  c:1, e:"Ketua Panitia Sembilan adalah Ir. Soekarno."
+ },
+ {
+  q:"Berikut ini yang merupakan anggota Panitia Sembilan adalah ...",
+  a:["A.A. Maramis","R.A. Kartini","Pattimura","Pangeran Diponegoro"],
+  c:0, e:"A.A. Maramis termasuk anggota Panitia Sembilan."
+ },
+ {
+  q:"Apa kepanjangan PPKI?",
+  a:["Panitia Persiapan Kemerdekaan Indonesia","Persatuan Pemuda Kemerdekaan Indonesia","Panitia Perdagangan Kemerdekaan Indonesia","Persiapan Pendidikan Kebangsaan Indonesia"],
+  c:0, e:"PPKI adalah Panitia Persiapan Kemerdekaan Indonesia."
+ },
+ {
+  q:"PPKI dibentuk pada tanggal ...",
+  a:["7 Agustus 1945","1 Juni 1945","20 Mei 1908","10 November 1945"],
+  c:0, e:"PPKI dibentuk pada 7 Agustus 1945."
+ },
+ {
+  q:"Siapa ketua PPKI?",
+  a:["Mohammad Yamin","Soekarno","Soepomo","Ahmad Soebardjo"],
+  c:1, e:"Ketua PPKI adalah Ir. Soekarno, dengan Mohammad Hatta sebagai wakil ketua."
+ },
+ {
+  q:"PPKI mengesahkan UUD 1945 pada tanggal ...",
+  a:["17 Agustus 1945","18 Agustus 1945","22 Juni 1945","1 Juni 1945"],
+  c:1, e:"Pada 18 Agustus 1945, PPKI mengesahkan UUD 1945."
+ },
+ {
+  q:"Berapa jumlah sila dalam Pancasila?",
+  a:["Tiga","Empat","Lima","Enam"],
+  c:2, e:"Pancasila terdiri dari lima sila."
+ },
+ {
+  q:"Lambang sila pertama Pancasila adalah ...",
+  a:["Rantai","Pohon beringin","Bintang","Kepala banteng"],
+  c:2, e:"Bintang melambangkan sila pertama, Ketuhanan Yang Maha Esa."
+ },
+ {
+  q:"Bunyi sila ketiga Pancasila adalah ...",
+  a:["Kemanusiaan yang adil dan beradab","Persatuan Indonesia","Keadilan sosial bagi seluruh rakyat Indonesia","Ketuhanan Yang Maha Esa"],
+  c:1, e:"Sila ketiga berbunyi Persatuan Indonesia."
+ },
+ {
+  q:"Pancasila menjadi dasar negara Indonesia berarti ...",
+  a:["Pedoman dasar dalam kehidupan bernegara","Aturan untuk satu kelompok saja","Pengganti semua kebudayaan","Hanya digunakan saat upacara"],
+  c:0, e:"Pancasila menjadi dasar negara sekaligus pedoman dalam kehidupan berbangsa dan bernegara."
+ }
+];
+
+const people = [
+ {
+  name:"Soekarno",
+  role:"Ketua Panitia Sembilan dan PPKI",
+  file:"Soekarno.jpg"
+ },
+ {
+  name:"Mohammad Hatta",
+  role:"Wakil ketua PPKI",
+  file:"Mohammad Hatta.jpg"
+ },
+ {
+  name:"Ahmad Soebardjo",
+  role:"Anggota Panitia Sembilan",
+  file:"Ahmad Soebardjo.jpg"
+ },
+ {
+  name:"Mohammad Yamin",
+  role:"Tokoh perumus dasar negara",
+  file:"Mohammad Yamin.jpg"
+ },
+ {
+  name:"Soepomo",
+  role:"Tokoh perumus dasar negara",
+  file:"Soepomo.jpg"
+ },
+ {
+  name:"A.A. Maramis",
+  role:"Anggota Panitia Sembilan",
+  file:"Alexander Andries Maramis.jpg"
+ },
+ {
+  name:"Abikoesno Tjokrosoejoso",
+  role:"Anggota Panitia Sembilan",
+  file:"Abikoesno Tjokrosoejoso.jpg"
+ },
+ {
+  name:"Agus Salim",
+  role:"Anggota Panitia Sembilan",
+  file:"Agus Salim.jpg"
+ },
+ {
+  name:"Wahid Hasyim",
+  role:"Anggota Panitia Sembilan",
+  file:"Wahid Hasyim.jpg"
+ },
+ {
+  name:"Ki Bagus Hadikusumo",
+  role:"Tokoh dalam persiapan kemerdekaan",
+  file:"Ki Bagus Hadikusumo.jpg"
+ }
+];
+
+const gallery = document.getElementById("gallery");
+people.forEach(p => {
+ const el = document.createElement("article");
+ el.className = "person";
+ const img = document.createElement("img");
+ img.loading = "lazy";
+ img.alt = "Foto " + p.name;
+ img.src = "https://commons.wikimedia.org/wiki/Special:FilePath/" +
+            encodeURIComponent(p.file) + "?width=400";
+ img.onerror = () => {
+   img.onerror = null;
+   img.src = "https://commons.wikimedia.org/wiki/Special:FilePath/" +
+             encodeURIComponent(p.file.replaceAll(" ","_")) + "?width=400";
+ };
+ const name = document.createElement("b");
+ name.textContent = p.name;
+ const role = document.createElement("small");
+ role.textContent = p.role;
+ el.append(img,name,role);
+ gallery.appendChild(el);
+});
+
+const symbols = ["🌿","🍀","✿","🌱","✨","🍃","🌼"];
+const decorations = document.getElementById("decorations");
+for(let i=0;i<19;i++){
+ const el = document.createElement("span");
+ el.className = "float";
+ el.textContent = symbols[i%symbols.length];
+ el.style.left = Math.random()*100+"%";
+ el.style.animationDuration = (9+Math.random()*13)+"s";
+ el.style.animationDelay = (-Math.random()*18)+"s";
+ el.style.fontSize = (15+Math.random()*19)+"px";
+ decorations.appendChild(el);
+}
+
+let order = [], current = 0, points = 0, answered = false;
+const $ = id => document.getElementById(id);
+
+function startQuiz(){
+ order = questions.map((_,i)=>i);
+ for(let i=order.length-1;i>0;i--){
+  const j=Math.floor(Math.random()*(i+1));
+  [order[i],order[j]]=[order[j],order[i]];
+ }
+ current=0; points=0; answered=false;
+ $("home").classList.add("hidden");
+ $("result").classList.add("hidden");
+ $("gallerySection").classList.add("hidden");
+ $("quiz").classList.remove("hidden");
+ renderQuestion();
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function renderQuestion(){
+ answered=false;
+ const item=questions[order[current]];
+ $("number").textContent=`SOAL ${current+1} / ${questions.length}`;
+ $("score").textContent=points;
+ $("bar").style.width=(current/questions.length*100)+"%";
+ $("question").textContent=item.q;
+ $("options").innerHTML="";
+ $("feedback").classList.add("hidden");
+ $("next").classList.add("hidden");
+ item.a.forEach((answer,i)=>{
+  const btn=document.createElement("button");
+  btn.className="option";
+  const letter=document.createElement("span");
+  letter.className="letter";
+  letter.textContent=String.fromCharCode(65+i);
+  const label=document.createElement("span");
+  label.textContent=answer;
+  btn.append(letter,label);
+  btn.onclick=()=>chooseAnswer(i);
+  $("options").appendChild(btn);
+ });
+ $("quiz").style.animation="none";
+ void $("quiz").offsetWidth;
+ $("quiz").style.animation="pop .35s ease";
+}
+
+function chooseAnswer(index){
+ if(answered)return;
+ answered=true;
+ const item=questions[order[current]];
+ const buttons=$("options").querySelectorAll("button");
+ buttons.forEach((btn,i)=>{
+  btn.disabled=true;
+  if(i===item.c)btn.classList.add("correct");
+  else if(i===index)btn.classList.add("wrong");
+ });
+ if(index===item.c)points+=5;
+ $("score").textContent=points;
+ $("feedback").classList.remove("hidden");
+ $("feedback").textContent=
+  (index===item.c?"✅ Benar! Keren banget! ":"💡 Belum tepat. ") + item.e;
+ $("next").classList.remove("hidden");
+ $("next").textContent=current===questions.length-1?
+  "LIHAT HASIL 🏆":"SOAL BERIKUTNYA →";
+ $("bar").style.width=((current+1)/questions.length*100)+"%";
+}
+
+function nextQuestion(){
+ if(!answered)return;
+ current++;
+ if(current<questions.length)renderQuestion();
+ else showResult();
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function showResult(){
+ $("quiz").classList.add("hidden");
+ $("result").classList.remove("hidden");
+ $("finalScore").textContent=points;
+ $("resultEmoji").textContent=points>=90?"🏆":points>=70?"🎉":"🌱";
+ $("resultTitle").textContent=points>=90?"Wah, kamu jago!":
+  points>=70?"Bagus banget!":"Tetap semangat!";
+ $("resultMessage").textContent=points>=90?
+  "Pengetahuan PKN kamu keren banget. Pertahankan!":
+  points>=70?"Kamu sudah memahami banyak materi. Ayo tingkatkan lagi!":
+  "Jangan menyerah! Baca pembahasannya dan coba kuis sekali lagi.";
+ $("resultDetails").textContent=
+  `Jawaban benar: ${points/5} dari 20 soal. Setiap soal bernilai 5 poin.`;
+ $("bar").style.width="100%";
+}
+
+function showHome(){
+ $("result").classList.add("hidden");
+ $("quiz").classList.add("hidden");
+ $("home").classList.remove("hidden");
+ $("gallerySection").classList.remove("hidden");
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+</script>
+</body>
+</html>
